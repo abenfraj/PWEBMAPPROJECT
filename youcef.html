@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <div id="maDiv" style="width: 800px; height: 600px"></div>
@@ -33,8 +34,24 @@
     // Juste pour changer la forme du curseur par défaut de la souris
     document.getElementById('maDiv').style.cursor = 'crosshair'
     //map.fitBounds(bornes);
+
+    var boundaries;
+    $.ajax({
+        url: "http://localhost:63342/PwebMap/countries.geo.json",
+        dataType: 'json',
+        type: 'GET',
+        async: false,
+        success: function(response) {
+            boundaries = response;
+            console.log(response);
+        }
+    })
+    // console.log(boundaries);
+
+
     // Initilisation d'un popup
     var popup = L.popup();
+
     // Fonction de conversion au format GeoJSON
     function coordGeoJSON(latlng,precision) {
         return '[' +
@@ -49,6 +66,7 @@
     }
     // Association Evenement/Fonction handler
     map.on('click', onMapClick);
+    L.geoJSON(boundaries).addTo(map);
 </script>
 </body>
 </html>
