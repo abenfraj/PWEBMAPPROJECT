@@ -30,8 +30,8 @@
       // Initialisation de la carte et association avec la div
       var map = new L.Map("maDiv", {
         center: [48.858376, 2.294442],
-        minZoom: 2,
-        maxZoom: 18,
+        minZoom: 1.5,
+        maxZoom: 1.5,
         zoom: 5,
         maxBounds: bornes,
       });
@@ -57,23 +57,23 @@
       var numberOfCountries;
       var randomCapitals = [];
       while (randomCapitals.length < 10) {
-        var r = Math.floor(Math.random() * 240) + 1;
+        var r = Math.floor(Math.random() * 247) + 1;
         if (randomCapitals.indexOf(r) === -1) randomCapitals.push(r);
       }
       console.log(randomCapitals);
 
       $.ajax({
-        url: "http://localhost/PWEBMAPPROJECT/country-capitals.json",
+        url: "http://localhost/PWEBMAPPROJECT/countries.json",
         dataType: "json",
         type: "GET",
         async: false,
         success: function (response) {
           numberOfCountries = response.length;
           randomCapitals.forEach((capitalNumber) => {
-            console.log(response[capitalNumber].CountryName);
+            console.log(response[capitalNumber].name);
             new L.marker([
-              response[capitalNumber].CapitalLatitude,
-              response[capitalNumber].CapitalLongitude,
+              response[capitalNumber].latlng[0],
+              response[capitalNumber].latlng[1],
             ]).addTo(map);
           });
           console.log(numberOfCountries);
