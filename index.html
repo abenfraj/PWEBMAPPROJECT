@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>Projet MAP PWEBC</title>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 99vh;
+        justify-content: space-around;
+        align-items: center;
+      "
+    >
+      <div id="maDiv" style="width: 1000px; height: 600px"></div>
+      <div
+        style="
+          width: 45%;
+          height: 30%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          align-items: center;
+        "
+      >
+        <div class="rules-text" style="width: 60%; text-align: center">
+          <span
+            >Localiser la capitale dans le temps imparti, vous avez 30 secondes
+            par réponse !</span
+          >
+        </div>
+        <div>
+          <span id="playBtn" class="start-btn">JOUER</span>
+        </div>
+        <div id="progressBar">
+          <div class="bar"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+    body {
+      background-color: rgb(91, 91, 173);
+    }
+
+    .start-btn {
+      font-size: 30pt;
+      font-family: "Press Start 2p";
+      text-align: center;
+      display: inline-block;
+      font-weight: bold;
+      padding: 10px 0 10px 10px;
+      background-color: lightgray;
+      text-shadow: -1px -1px black, 1px 1px white;
+      color: gray;
+      -webkit-border-radius: 7px;
+      -moz-border-radius: 7px;
+      -o-border-radius: 7px;
+      border-radius: 7px;
+      box-shadow: 0 0.2em gray;
+      cursor: pointer;
+    }
+
+    .start-btn:hover {
+      background-color: rgb(161, 150, 150);
+    }
+
+    .start-btn:active {
+      background-color: rgb(161, 150, 150);
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
+    }
+
+    .rules-text {
+      font-size: 14pt;
+      font-family: "Press Start 2p";
+      color: white;
+    }
+
+    #progressBar {
+      width: 90%;
+      margin: 10px auto;
+      height: 22px;
+      background-color: #b8c3c3;
+    }
+    #progressBar div {
+      height: 100%;
+      text-align: center;
+      width: 0;
+      background-color: #4b5863;
+      box-sizing: border-box;
+    }
+    p {
+      text-align: center;
+    }
+    /* Do not take in account */
+    html {
+      padding-top: 30px;
+    }
+    a.solink {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      text-align: center;
+      background: #f3f5f6;
+      color: #cfd6d9;
+      border: 1px solid #cfd6d9;
+      line-height: 30px;
+      text-decoration: none;
+      transition: all 0.3s;
+      z-index: 999;
+    }
+    a.solink::first-letter {
+      text-transform: capitalize;
+    }
+    a.solink:hover {
+      color: #428bca;
+    }
+  </style>
+</html>
