@@ -58,31 +58,23 @@ window.onload = function init() {
     newMarker = new L.marker(e.latlng).addTo(map);
     console.log(e.latlng);
     console.log(getDistanceFromLatLonInKm(e.latlng.lat, e.latlng.lng, 0, 0));
-    // popup
-    //   .setLatLng(e.latlng)
-    //   .setContent(
-    //     "Hello click détecté sur la carte !<br/> " +
-    //       e.latlng.toString() +
-    //       "<br/>en GeoJSON: " +
-    //       coordGeoJSON(e.latlng, 7) +
-    //       "<br/>Niveau de  Zoom: " +
-    //       map.getZoom().toString()
-    //   )
-    //   .openOn(map);
   });
   L.geoJSON(boundaries).addTo(map);
-
+  var capitalToGuess = $("#capitalToGuess");
   var playBtn = document.getElementById("playBtn");
+  var isPlaying = false;
+  var currentTry = 0;
   playBtn.onclick = function () {
-    var randomCapitals = [];
-    while (randomCapitals.length < 10) {
-      var r = Math.floor(Math.random() * 247) + 1;
-      if (randomCapitals.indexOf(r) === -1) randomCapitals.push(r);
-    }
-    console.log(randomCapitals);
-    progress(30, 30, $("#progressBar"));
-    
-    $.ajax({
+    if (!isPlaying) {
+      isPlaying = true;
+      var randomCapitals = [];
+      while (randomCapitals.length < 10) {
+        var r = Math.floor(Math.random() * 247) + 1;
+        if (randomCapitals.indexOf(r) === -1) randomCapitals.push(r);
+      }
+      console.log(randomCapitals);
+      progress(30, 30, $("#progressBar"));
+      $.ajax({
         url: "http://localhost/PWEBMAPPROJECT/countries.json",
         dataType: "json",
         type: "GET",
@@ -96,11 +88,11 @@ window.onload = function init() {
               response[capitalNumber].latlng[1],
             ]).addTo(map);
           });
-          console.log(numberOfCountries);
+          capitalToGuess.html("Pays: " + response[randomCapitals[currentTry]].name +"<br> Capitale: " + response[randomCapitals[currentTry++]].capital);
         },
       });
+    }
   };
-  
 };
 
 function deg2rad(deg) {
