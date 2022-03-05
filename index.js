@@ -60,10 +60,13 @@ window.onload = function init() {
     console.log(getDistanceFromLatLonInKm(e.latlng.lat, e.latlng.lng, 0, 0));
   });
   L.geoJSON(boundaries).addTo(map);
+
   var capitalToGuess = $("#capitalToGuess");
   var playBtn = document.getElementById("playBtn");
   var isPlaying = false;
   var currentTry = 0;
+  var pays = [];
+
   playBtn.onclick = function () {
     if (!isPlaying) {
       isPlaying = true;
@@ -73,24 +76,36 @@ window.onload = function init() {
         if (randomCapitals.indexOf(r) === -1) randomCapitals.push(r);
       }
       console.log(randomCapitals);
-      progress(30, 30, $("#progressBar"));
+
       $.ajax({
         url: "http://localhost/PWEBMAPPROJECT/countries.json",
         dataType: "json",
         type: "GET",
         async: false,
         success: function (response) {
-          numberOfCountries = response.length;
+          pays = response;
           randomCapitals.forEach((capitalNumber) => {
-            console.log(response[capitalNumber].name);
+            console.log(pays[capitalNumber].name);
             new L.marker([
-              response[capitalNumber].latlng[0],
-              response[capitalNumber].latlng[1],
+              pays[capitalNumber].latlng[0],
+              pays[capitalNumber].latlng[1],
             ]).addTo(map);
           });
-          capitalToGuess.html("Pays: " + response[randomCapitals[currentTry]].name +"<br> Capitale: " + response[randomCapitals[currentTry++]].capital);
+          currentTry = showCapitalToGuess(
+            capitalToGuess,
+            pays,
+            randomCapitals,
+            currentTry
+          );
         },
       });
+
+      var time = 10;
+      progress(time, time, $("#progressBar"));
+      setInterval(function () {
+        progress(time, time, $("#progressBar"));
+        currentTry = showCapitalToGuess(capitalToGuess, pays, randomCapitals, currentTry);
+      }, 11000);
     }
   };
 };
@@ -137,6 +152,7 @@ function progress(timeleft, timetotal, $element) {
     );
   if (timeleft > 0) {
     setTimeout(function () {
+      console.log(timeleft);
       progress(timeleft - 1, timetotal, $element);
     }, 1000);
   }
@@ -146,4 +162,14 @@ function progress(timeleft, timetotal, $element) {
   var newtimeleft = timeString;
 
   $("#timer").text(newtimeleft);
+}
+
+function showCapitalToGuess(capitalToGuess, pays, randomCapitals, currentTry) {
+  capitalToGuess.html(
+    "Pays: " +
+      pays[randomCapitals[currentTry]].name +
+      "<br> Capitale: " +
+      pays[randomCapitals[currentTry++]].capital
+  );
+  return currentTry;
 }
