@@ -44,30 +44,6 @@ window.onload = function init() {
   });
 
   var numberOfCountries;
-  var randomCapitals = [];
-  while (randomCapitals.length < 10) {
-    var r = Math.floor(Math.random() * 247) + 1;
-    if (randomCapitals.indexOf(r) === -1) randomCapitals.push(r);
-  }
-  console.log(randomCapitals);
-
-  $.ajax({
-    url: "http://localhost/PWEBMAPPROJECT/countries.json",
-    dataType: "json",
-    type: "GET",
-    async: false,
-    success: function (response) {
-      numberOfCountries = response.length;
-      randomCapitals.forEach((capitalNumber) => {
-        console.log(response[capitalNumber].name);
-        new L.marker([
-          response[capitalNumber].latlng[0],
-          response[capitalNumber].latlng[1],
-        ]).addTo(map);
-      });
-      console.log(numberOfCountries);
-    },
-  });
 
   // Initilisation d'un popup
   var popup = L.popup();
@@ -78,11 +54,53 @@ window.onload = function init() {
   var distance;
 
   // Association Evenement/Fonction handler
-  map.on("click", onMapClick);
+  map.on("click", function onMapClick(e) {
+    newMarker = new L.marker(e.latlng).addTo(map);
+    console.log(e.latlng);
+    console.log(getDistanceFromLatLonInKm(e.latlng.lat, e.latlng.lng, 0, 0));
+    // popup
+    //   .setLatLng(e.latlng)
+    //   .setContent(
+    //     "Hello click détecté sur la carte !<br/> " +
+    //       e.latlng.toString() +
+    //       "<br/>en GeoJSON: " +
+    //       coordGeoJSON(e.latlng, 7) +
+    //       "<br/>Niveau de  Zoom: " +
+    //       map.getZoom().toString()
+    //   )
+    //   .openOn(map);
+  });
   L.geoJSON(boundaries).addTo(map);
 
   var playBtn = document.getElementById("playBtn");
-  playBtn.onclick = function() {progress(30, 30, $('#progressBar'));};
+  playBtn.onclick = function () {
+    var randomCapitals = [];
+    while (randomCapitals.length < 10) {
+      var r = Math.floor(Math.random() * 247) + 1;
+      if (randomCapitals.indexOf(r) === -1) randomCapitals.push(r);
+    }
+    console.log(randomCapitals);
+    progress(30, 30, $("#progressBar"));
+    
+    $.ajax({
+        url: "http://localhost/PWEBMAPPROJECT/countries.json",
+        dataType: "json",
+        type: "GET",
+        async: false,
+        success: function (response) {
+          numberOfCountries = response.length;
+          randomCapitals.forEach((capitalNumber) => {
+            console.log(response[capitalNumber].name);
+            new L.marker([
+              response[capitalNumber].latlng[0],
+              response[capitalNumber].latlng[1],
+            ]).addTo(map);
+          });
+          console.log(numberOfCountries);
+        },
+      });
+  };
+  
 };
 
 function deg2rad(deg) {
@@ -115,22 +133,6 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 }
 
 // Fonction qui réagit au clic sur la carte (e contiendra les données liées au clic)
-function onMapClick(e) {
-  newMarker = new L.marker(e.latlng).addTo(map);
-  console.log(e.latlng);
-  console.log(getDistanceFromLatLonInKm(e.latlng.lat, e.latlng.lng, 0, 0));
-  // popup
-  //   .setLatLng(e.latlng)
-  //   .setContent(
-  //     "Hello click détecté sur la carte !<br/> " +
-  //       e.latlng.toString() +
-  //       "<br/>en GeoJSON: " +
-  //       coordGeoJSON(e.latlng, 7) +
-  //       "<br/>Niveau de  Zoom: " +
-  //       map.getZoom().toString()
-  //   )
-  //   .openOn(map);
-}
 
 function progress(timeleft, timetotal, $element) {
   var progressBarWidth = (timeleft * $element.width()) / timetotal;
