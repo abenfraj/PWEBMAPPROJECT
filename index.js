@@ -1,3 +1,9 @@
+var alreadyPlayed = false;
+var didNotPlay = false;
+var numberOfTimesPlayed = 0;
+var score = 0;
+var numberOfTimesToPlay = 3;
+
 window.onload = function init() {
   var northWest = L.latLng(90, -180);
   var southEast = L.latLng(-90, 180);
@@ -16,9 +22,9 @@ window.onload = function init() {
   // Initialisation de la carte et association avec la div
   var map = new L.Map("maDiv", {
     center: [48.858376, 2.294442],
-    minZoom: 1.5,
+    minZoom: 1.2,
     maxZoom: 5,
-    zoom: 5,
+    zoom: 1.2,
     maxBounds: bornes,
   });
 
@@ -43,31 +49,21 @@ window.onload = function init() {
     },
   });
 
-  var numberOfCountries;
-
   // Initilisation d'un popup
   var popup = L.popup();
 
   // Fonction de conversion au format GeoJSON
-
-  var newMarker;
-  var distance;
-
-  // Association Evenement/Fonction handler
-  map.on("click", function onMapClick(e) {
-    newMarker = new L.marker(e.latlng).addTo(map);
-    console.log(e.latlng);
-    console.log(getDistanceFromLatLonInKm(e.latlng.lat, e.latlng.lng, 0, 0));
-  });
   L.geoJSON(boundaries).addTo(map);
 
   var capitalToGuess = $("#capitalToGuess");
   var playBtn = document.getElementById("playBtn");
   var isPlaying = false;
-  var currentTry = 0;
   var pays = [];
+  var scoreText = $("#score");
 
   playBtn.onclick = function () {
+    $(this).hide();
+    var currentTry = 0;
     if (!isPlaying) {
       isPlaying = true;
       var randomCapitals = [];
@@ -86,29 +82,129 @@ window.onload = function init() {
           pays = response;
           randomCapitals.forEach((capitalNumber) => {
             console.log(pays[capitalNumber].name);
-            new L.marker([
-              pays[capitalNumber].latlng[0],
-              pays[capitalNumber].latlng[1],
-            ]).addTo(map);
           });
-          currentTry = showCapitalToGuess(
-            capitalToGuess,
-            pays,
-            randomCapitals,
-            currentTry
-          );
         },
       });
 
-      var time = 10;
+      var time = 15;
       progress(time, time, $("#progressBar"));
+      currentTry = showCapitalToGuess(
+        capitalToGuess,
+        pays,
+        randomCapitals,
+        currentTry
+      );
       setInterval(function () {
-        progress(time, time, $("#progressBar"));
-        currentTry = showCapitalToGuess(capitalToGuess, pays, randomCapitals, currentTry);
-      }, 11000);
+        if (didNotPlay) {
+          numberOfTimesPlayed++;
+          if (numberOfTimesPlayed < numberOfTimesToPlay) {
+            progress(time, time, $("#progressBar"));
+            currentTry = showCapitalToGuess(
+              capitalToGuess,
+              pays,
+              randomCapitals,
+              currentTry
+            );
+          } else {
+            endGame();
+          }
+        }
+      }, 17500);
+
+      var newMarker;
+
+      var greenIcon = new L.Icon({
+        iconUrl:
+          "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+        shadowUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      });
+
+      // Association Evenement/Fonction handler pour afficher la réponse
+      map.on("click", function onMapClick(e) {
+        didNotPlay = false;
+        if (!alreadyPlayed && isPlaying) {
+          $("#progressBar").find("div.bar").stop();
+          numberOfTimesPlayed++;
+          newMarker = new L.marker(e.latlng).addTo(map);
+          alreadyPlayed = true;
+          console.log(e.latlng);
+          console.log(
+            pays[randomCapitals[currentTry - 1]].name +
+              ", " +
+              pays[randomCapitals[currentTry - 1]].latlng[0] +
+              ", " +
+              pays[randomCapitals[currentTry - 1]].latlng[1]
+          );
+          console.log(
+            getDistanceFromLatLonInKm(
+              e.latlng.lat,
+              e.latlng.lng,
+              pays[randomCapitals[currentTry - 1]].latlng[0],
+              pays[randomCapitals[currentTry - 1]].latlng[1]
+            )
+          );
+          var answerMarker = new L.marker(
+            [
+              pays[randomCapitals[currentTry - 1]].latlng[0],
+              pays[randomCapitals[currentTry - 1]].latlng[1],
+            ],
+            { icon: greenIcon }
+          ).addTo(map);
+          var ligne = L.polyline(
+            [
+              [e.latlng.lat, e.latlng.lng],
+              [
+                pays[randomCapitals[currentTry - 1]].latlng[0],
+                pays[randomCapitals[currentTry - 1]].latlng[1],
+              ],
+            ],
+            { color: "black", weight: 4 }
+          ).addTo(map);
+          var distance = getDistanceFromLatLonInKm(
+            e.latlng.lat,
+            e.latlng.lng,
+            pays[randomCapitals[currentTry - 1]].latlng[0],
+            pays[randomCapitals[currentTry - 1]].latlng[1]
+          );
+          score = parseInt(scoreText.text()) + distance;
+          scoreText.html(Math.round(score));
+          capitalToGuess.html(
+            "Vous avez cliqué à " + parseInt(distance) + "km du bon endroit !"
+          );
+        }
+        if (numberOfTimesPlayed < numberOfTimesToPlay) {
+          setTimeout(function () {
+            ligne.remove();
+            newMarker.remove();
+            answerMarker.remove();
+            console.log(time);
+            alreadyPlayed = false;
+            progress(time, time, $("#progressBar"));
+            showCapitalToGuess(
+              capitalToGuess,
+              pays,
+              randomCapitals,
+              currentTry++
+            );
+          }, 3000);
+        } else {
+          endGame();
+        }
+      });
     }
   };
 };
+
+function calculerScore() {
+  return score;
+}
+
+function initPays() {}
 
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
@@ -150,18 +246,21 @@ function progress(timeleft, timetotal, $element) {
       timeleft == timetotal ? 0 : 1000,
       "linear"
     );
-  if (timeleft > 0) {
-    setTimeout(function () {
-      console.log(timeleft);
+  if (timeleft > -1) {
+    const progressTimeoutId = setTimeout(function () {
       progress(timeleft - 1, timetotal, $element);
     }, 1000);
+    if (alreadyPlayed) {
+      $element.find("div.bar").stop();
+      clearTimeout(progressTimeoutId);
+    }
+  } else {
+    document.getElementById("capitalToGuess").innerHTML = "Temps écoulé !";
+    console.log("Temps écoulé !");
+    didNotPlay = true;
   }
   var date = new Date(null);
   date.setSeconds(timeleft);
-  var timeString = date.toISOString().substr(11, 8);
-  var newtimeleft = timeString;
-
-  $("#timer").text(newtimeleft);
 }
 
 function showCapitalToGuess(capitalToGuess, pays, randomCapitals, currentTry) {
@@ -173,3 +272,28 @@ function showCapitalToGuess(capitalToGuess, pays, randomCapitals, currentTry) {
   );
   return currentTry;
 }
+
+function endGame() {
+  $("#playBtn").html("Rejouer");
+  //addeventlister du bouton playBtn pour rejouer
+  $("#playBtn").show();
+  $("#capitalToGuess").html(
+    "Partie terminée ! <br> Score final : " + parseInt(score)
+  );
+}
+// $.ajax({
+//   url: "http://localhost/PWEBMAPPROJECT/countries.json",
+//   dataType: "json",
+//   type: "GET",
+//   async: false,
+//   success: function (response) {
+//     pays = response;
+//     randomCapitals.forEach((capitalNumber) => {
+//       console.log(pays[capitalNumber].name);
+//       new L.marker([
+//         pays[capitalNumber].latlng[0],
+//         pays[capitalNumber].latlng[1],
+//       ]).addTo(map);
+//     });
+//   },
+// });

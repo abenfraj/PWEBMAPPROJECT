@@ -13,40 +13,65 @@
   </head>
   <body>
     <div
+      class="rules-text"
       style="
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         width: 100%;
         height: 99vh;
         justify-content: space-around;
         align-items: center;
       "
     >
-      <div id="maDiv" style="width: 1000px; height: 600px"></div>
       <div
         style="
-          width: 45%;
-          height: 40%;
+          width: 100%;
+          height: 10%;
           display: flex;
-          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          font-size: 40pt;
+        "
+      >
+        <span>Score : <span id="score">0</span></span>
+      </div>
+
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          height: 80%;
           justify-content: space-around;
           align-items: center;
         "
       >
-        <div class="rules-text" style="width: 60%; text-align: center">
-          <span
-            >Localiser la capitale dans le temps imparti, vous avez 30 secondes
-            par réponse !</span
-          >
-        </div>
-        <div>
-          <span id="playBtn" class="start-btn">JOUER</span>
-        </div>
-        <div id="progressBar">
-          <div class="bar"></div>
-        </div>
-        <div class="capital-text" style="width: 80%; text-align: center">
-          <span id="capitalToGuess"></span>
+        <div id="maDiv" style="width: 800px; height: 510px"></div>
+        <div
+          style="
+            width: 45%;
+            height: 40%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+          "
+        >
+          <div class="rules-text" style="width: 60%; text-align: center">
+            <span
+              >Localiser la capitale avant le temps imparti, vous avez 30
+              secondes par réponse !</span
+            >
+          </div>
+          <div>
+            <span id="playBtn" class="start-btn">JOUER</span>
+          </div>
+          <div id="progressBar">
+            <div class="bar"></div>
+          </div>
+          <div class="capital-text" style="width: 80%; text-align: center">
+            <span id="capitalToGuess"></span>
+          </div>
         </div>
       </div>
     </div>
