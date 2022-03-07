@@ -40,7 +40,7 @@ window.onload = function init() {
 
   var boundaries;
   $.ajax({
-    url: "http://localhost/PWEBMAPPROJECT/countries.geo.json",
+    url: "http://localhost:50000/countries.geo.json",
     dataType: "json",
     type: "GET",
     async: false,
@@ -75,7 +75,7 @@ window.onload = function init() {
       console.log(randomCapitals);
 
       $.ajax({
-        url: "http://localhost/PWEBMAPPROJECT/countries.json",
+        url: "http://localhost:50000/countries.json",
         dataType: "json",
         type: "GET",
         async: false,
@@ -309,3 +309,5 @@ function endGame() {
 //     });
 //   },
 // });
+
+// https://prod.liveshare.vsengsaas.visualstudio.com/join?D50CBC17FE9CC1CEE5D7BBDE8AFA94DAD1AD
