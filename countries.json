@@ -55,7 +55,7 @@
             60.116667, 
             19.9
         ], 
-        "name": "\u00c5land Islands", 
+        "name": "Aland Islands", 
         "country_code": "AX", 
         "capital": "Mariehamn"
     }, 
@@ -142,27 +142,7 @@
         "country_code": "AS", 
         "capital": "Pago Pago"
     }, 
-    {
-        "timezones": [
-            "Antarctica/McMurdo", 
-            "Antarctica/Casey", 
-            "Antarctica/Davis", 
-            "Antarctica/DumontDUrville", 
-            "Antarctica/Mawson", 
-            "Antarctica/Palmer", 
-            "Antarctica/Rothera", 
-            "Antarctica/Syowa", 
-            "Antarctica/Troll", 
-            "Antarctica/Vostok"
-        ], 
-        "latlng": [
-            -90, 
-            0
-        ], 
-        "name": "Antarctica", 
-        "country_code": "AQ", 
-        "capital": null
-    }, 
+     
     {
         "timezones": [
             "Indian/Kerguelen"
@@ -466,18 +446,7 @@
         "country_code": "BT", 
         "capital": "Thimphu"
     }, 
-    {
-        "timezones": [
-            "Europe/Oslo"
-        ],
-        "latlng": [
-            -54.43333333, 
-            3.4
-        ], 
-        "name": "Bouvet Island", 
-        "country_code": "BV", 
-        "capital": null
-    }, 
+  
     {
         "timezones": [
             "Africa/Gaborone"
@@ -1700,18 +1669,7 @@
         "country_code": "LV", 
         "capital": "Riga"
     }, 
-    {
-        "timezones": [
-            "Asia/Macau"
-        ], 
-        "latlng": [
-            22.16666666, 
-            113.55
-        ], 
-        "name": "Macau", 
-        "country_code": "MO", 
-        "capital": null
-    }, 
+    
     {
         "timezones": [
             "America/Marigot"
@@ -2899,20 +2857,6 @@
         "name": "Ukraine", 
         "country_code": "UA", 
         "capital": "Kiev"
-    }, 
-    {
-        "timezones": [
-            "Pacific/Johnston", 
-            "Pacific/Midway", 
-            "Pacific/Wake"
-        ], 
-        "latlng": [
-            19.2911437, 
-            166.618332
-        ], 
-        "name": "United States Minor Outlying Islands", 
-        "country_code": "UM", 
-        "capital": null
     }, 
     {
         "timezones": [
